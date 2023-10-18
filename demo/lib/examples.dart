@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:pdf/pdf.dart';
+import 'package:printing_demo/examples/report2.dart';
 
 import 'data.dart';
 import 'examples/calendar.dart';
@@ -16,6 +17,7 @@ const examples = <Example>[
   Example('DOCUMENT', 'document.dart', generateDocument),
   Example('INVOICE', 'invoice.dart', generateInvoice),
   Example('REPORT', 'report.dart', generateReport),
+  Example('REPORT2', 'report2.dart', generateReportTwo),
   Example('CALENDAR', 'calendar.dart', generateCalendar),
   Example('CERTIFICATE', 'certificate.dart', generateCertificate, true),
 ];

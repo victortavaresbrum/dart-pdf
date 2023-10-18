@@ -5,11 +5,13 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.12.0 <4.0.0"
-  flutter: ">=1.16.0"
+  flutter: ">=2.17.0"
 
 dependencies:
+  fl_chart: ^0.64.0
   flutter:
     sdk: flutter
+  flutter_chart: ^0.1.6
   intl: ^0.18.0
   open_file: ^3.2.1
   path_provider: ^2.0.12

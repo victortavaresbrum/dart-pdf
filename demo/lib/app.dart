@@ -27,6 +27,7 @@ import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import 'data.dart';
+import 'drag_widget.dart';
 import 'examples.dart';
 
 class MyApp extends StatefulWidget {
@@ -148,12 +149,47 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           isScrollable: true,
         ),
       ),
-      body: PdfPreview(
-        maxPageWidth: 700,
-        build: (format) => examples[_tab].builder(format, _data),
-        actions: actions,
-        onPrinted: _showPrintedToast,
-        onShared: _showSharedToast,
+      body: Row(
+        children: [
+          Expanded(
+              flex: 1,
+              child: ListView(
+                children: [
+                  InkWell(
+                    mouseCursor: SystemMouseCursors.click,
+                    child: Ink(
+                      height: 36,
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.add,
+                          ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Text('Nome do usuário'),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              )),
+          Expanded(
+            flex: 5,
+            child: Stack(
+              children: [
+                PdfPreview(
+                  maxPageWidth: 700,
+                  build: (format) => examples[_tab].builder(format, _data),
+                  actions: actions,
+                  onPrinted: _showPrintedToast,
+                  onShared: _showSharedToast,
+                ),
+                DragWidget()
+              ],
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepOrange,

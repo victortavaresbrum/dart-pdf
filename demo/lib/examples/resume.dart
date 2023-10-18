@@ -17,140 +17,54 @@
 import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
-
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/widgets.dart';
+// import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
 import '../data.dart';
 
-const PdfColor green = PdfColor.fromInt(0xff9ce5d0);
-const PdfColor lightGreen = PdfColor.fromInt(0xffcdf1e7);
+const PdfColor blue = PdfColor.fromInt(0xff91E9F2);
+const PdfColor lightGreen = PdfColor.fromInt(0xff84BFAE);
 const sep = 120.0;
 
 Future<Uint8List> generateResume(PdfPageFormat format, CustomData data) async {
-  final doc = pw.Document(title: 'My Résumé', author: 'David PHAM-VAN');
-
-  final profileImage = pw.MemoryImage(
-    (await rootBundle.load('assets/profile.jpg')).buffer.asUint8List(),
-  );
-
+  final doc = Document(title: 'My Résumé', author: 'David PHAM-VAN');
   final pageTheme = await _myPageTheme(format);
 
   doc.addPage(
-    pw.MultiPage(
+    MultiPage(
       pageTheme: pageTheme,
-      build: (pw.Context context) => [
-        pw.Partitions(
+      build: (Context context) => [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            pw.Partition(
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: <pw.Widget>[
-                  pw.Container(
-                    padding: const pw.EdgeInsets.only(left: 30, bottom: 20),
-                    child: pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: <pw.Widget>[
-                        pw.Text('Parnella Charlesbois',
-                            textScaleFactor: 2,
-                            style: pw.Theme.of(context)
-                                .defaultTextStyle
-                                .copyWith(fontWeight: pw.FontWeight.bold)),
-                        pw.Padding(padding: const pw.EdgeInsets.only(top: 10)),
-                        pw.Text('Electrotyper',
-                            textScaleFactor: 1.2,
-                            style: pw.Theme.of(context)
-                                .defaultTextStyle
-                                .copyWith(
-                                    fontWeight: pw.FontWeight.bold,
-                                    color: green)),
-                        pw.Padding(padding: const pw.EdgeInsets.only(top: 20)),
-                        pw.Row(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                          children: <pw.Widget>[
-                            pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment.start,
-                              children: <pw.Widget>[
-                                pw.Text('568 Port Washington Road'),
-                                pw.Text('Nordegg, AB T0M 2H0'),
-                                pw.Text('Canada, ON'),
-                              ],
-                            ),
-                            pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment.start,
-                              children: <pw.Widget>[
-                                pw.Text('+1 403-721-6898'),
-                                _UrlText('p.charlesbois@yahoo.com',
-                                    'mailto:p.charlesbois@yahoo.com'),
-                                _UrlText(
-                                    'wholeprices.ca', 'https://wholeprices.ca'),
-                              ],
-                            ),
-                            pw.Padding(padding: pw.EdgeInsets.zero)
-                          ],
-                        ),
-                      ],
-                    ),
+            _Block(title: 'Batatinha'),
+            Partition(
+              child: Column(
+                children: <Widget>[
+                  Center(
+                    child: Text('Declaração',
+                        style: Theme.of(context)
+                            .defaultTextStyle
+                            .copyWith(fontWeight: FontWeight.bold)),
                   ),
-                  _Category(title: 'Work Experience'),
-                  _Block(
-                      title: 'Tour bus driver',
-                      icon: const pw.IconData(0xe530)),
-                  _Block(
-                      title: 'Logging equipment operator',
-                      icon: const pw.IconData(0xe30d)),
-                  _Block(title: 'Foot doctor', icon: const pw.IconData(0xe3f3)),
-                  _Block(
-                      title: 'Unicorn trainer',
-                      icon: const pw.IconData(0xf0cf)),
-                  _Block(
-                      title: 'Chief chatter', icon: const pw.IconData(0xe0ca)),
-                  pw.SizedBox(height: 20),
-                  _Category(title: 'Education'),
-                  _Block(title: 'Bachelor Of Commerce'),
-                  _Block(title: 'Bachelor Interior Design'),
+                  SizedBox(height: 20),
+                  Text(
+                    'Declaro para os devidos fins, que a nutricionista _________________________,CRN/RS ________________ está cursando o Programa de ResidênciaMultiprofissional em Saúde - _____________________, curso credenciado pelo CNRMS/MEC, na Sociedade Beneficência e Caridade Lajeado (Hospital Bruno Born). Suas atividades práticas na Instituição e na saúde pública iniciaram em 01/03/2022 e serão concluídas no dia 28/02/2024.',
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [Text('Lajeado, 19 de janeiro de 2023.')])
                 ],
               ),
             ),
-            pw.Partition(
-              width: sep,
-              child: pw.Column(
-                children: [
-                  pw.Container(
-                    height: pageTheme.pageFormat.availableHeight,
-                    child: pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.center,
-                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                      children: <pw.Widget>[
-                        pw.ClipOval(
-                          child: pw.Container(
-                            width: 100,
-                            height: 100,
-                            color: lightGreen,
-                            child: pw.Image(profileImage),
-                          ),
-                        ),
-                        pw.Column(children: <pw.Widget>[
-                          _Percent(size: 60, value: .7, title: pw.Text('Word')),
-                          _Percent(
-                              size: 60, value: .4, title: pw.Text('Excel')),
-                        ]),
-                        pw.BarcodeWidget(
-                          data: 'Parnella Charlesbois',
-                          width: 60,
-                          height: 60,
-                          barcode: pw.Barcode.qrCode(),
-                          drawText: false,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
+            Partition(
+                child: Column(
+              children: [],
+            ))
           ],
         ),
       ],
@@ -159,7 +73,7 @@ Future<Uint8List> generateResume(PdfPageFormat format, CustomData data) async {
   return doc.save();
 }
 
-Future<pw.PageTheme> _myPageTheme(PdfPageFormat format) async {
+Future<PageTheme> _myPageTheme(PdfPageFormat format) async {
   final bgShape = await rootBundle.loadString('assets/resume.svg');
 
   format = format.applyMargin(
@@ -167,26 +81,25 @@ Future<pw.PageTheme> _myPageTheme(PdfPageFormat format) async {
       top: 4.0 * PdfPageFormat.cm,
       right: 2.0 * PdfPageFormat.cm,
       bottom: 2.0 * PdfPageFormat.cm);
-  return pw.PageTheme(
+  return PageTheme(
     pageFormat: format,
-    theme: pw.ThemeData.withFont(
+    theme: ThemeData.withFont(
       base: await PdfGoogleFonts.openSansRegular(),
       bold: await PdfGoogleFonts.openSansBold(),
       icons: await PdfGoogleFonts.materialIcons(),
     ),
-    buildBackground: (pw.Context context) {
-      return pw.FullPage(
+    buildBackground: (Context context) {
+      return FullPage(
         ignoreMargins: true,
-        child: pw.Stack(
+        child: Stack(
           children: [
-            pw.Positioned(
-              child: pw.SvgImage(svg: bgShape),
+            Positioned(
+              child: SvgImage(svg: bgShape),
               left: 0,
               top: 0,
             ),
-            pw.Positioned(
-              child: pw.Transform.rotate(
-                  angle: pi, child: pw.SvgImage(svg: bgShape)),
+            Positioned(
+              child: Transform.rotate(angle: pi, child: SvgImage(svg: bgShape)),
               right: 0,
               bottom: 0,
             ),
@@ -197,7 +110,7 @@ Future<pw.PageTheme> _myPageTheme(PdfPageFormat format) async {
   );
 }
 
-class _Block extends pw.StatelessWidget {
+class _Block extends StatelessWidget {
   _Block({
     required this.title,
     this.icon,
@@ -205,62 +118,60 @@ class _Block extends pw.StatelessWidget {
 
   final String title;
 
-  final pw.IconData? icon;
+  final IconData? icon;
 
   @override
-  pw.Widget build(pw.Context context) {
-    return pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: <pw.Widget>[
-          pw.Row(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: <pw.Widget>[
-                pw.Container(
-                  width: 6,
-                  height: 6,
-                  margin: const pw.EdgeInsets.only(top: 5.5, left: 2, right: 5),
-                  decoration: const pw.BoxDecoration(
-                    color: green,
-                    shape: pw.BoxShape.circle,
-                  ),
-                ),
-                pw.Text(title,
-                    style: pw.Theme.of(context)
-                        .defaultTextStyle
-                        .copyWith(fontWeight: pw.FontWeight.bold)),
-                pw.Spacer(),
-                if (icon != null) pw.Icon(icon!, color: lightGreen, size: 18),
-              ]),
-          pw.Container(
-            decoration: const pw.BoxDecoration(
-                border: pw.Border(left: pw.BorderSide(color: green, width: 2))),
-            padding: const pw.EdgeInsets.only(left: 10, top: 5, bottom: 5),
-            margin: const pw.EdgeInsets.only(left: 5),
-            child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: <pw.Widget>[
-                  pw.Lorem(length: 20),
+  Widget build(Context context) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+            Container(
+              width: 6,
+              height: 6,
+              margin: const EdgeInsets.only(top: 5.5, left: 2, right: 5),
+              decoration: const BoxDecoration(
+                color: blue,
+                shape: BoxShape.circle,
+              ),
+            ),
+            Text(title,
+                style: Theme.of(context)
+                    .defaultTextStyle
+                    .copyWith(fontWeight: FontWeight.bold)),
+            Spacer(),
+            if (icon != null) Icon(icon!, color: lightGreen, size: 18),
+          ]),
+          Container(
+            decoration: const BoxDecoration(
+                border: Border(left: BorderSide(color: blue, width: 2))),
+            padding: const EdgeInsets.only(left: 10, top: 5, bottom: 5),
+            margin: const EdgeInsets.only(left: 5),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Lorem(length: 20),
                 ]),
           ),
         ]);
   }
 }
 
-class _Category extends pw.StatelessWidget {
+class _Category extends StatelessWidget {
   _Category({required this.title});
 
   final String title;
 
   @override
-  pw.Widget build(pw.Context context) {
-    return pw.Container(
-      decoration: const pw.BoxDecoration(
+  Widget build(Context context) {
+    return Container(
+      decoration: const BoxDecoration(
         color: lightGreen,
-        borderRadius: pw.BorderRadius.all(pw.Radius.circular(6)),
+        borderRadius: BorderRadius.all(Radius.circular(6)),
       ),
-      margin: const pw.EdgeInsets.only(bottom: 10, top: 20),
-      padding: const pw.EdgeInsets.fromLTRB(10, 4, 10, 4),
-      child: pw.Text(
+      margin: const EdgeInsets.only(bottom: 10, top: 20),
+      padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
+      child: Text(
         title,
         textScaleFactor: 1.5,
       ),
@@ -268,7 +179,7 @@ class _Category extends pw.StatelessWidget {
   }
 }
 
-class _Percent extends pw.StatelessWidget {
+class _Percent extends StatelessWidget {
   _Percent({
     required this.size,
     required this.value,
@@ -279,33 +190,33 @@ class _Percent extends pw.StatelessWidget {
 
   final double value;
 
-  final pw.Widget title;
+  final Widget title;
 
   static const fontSize = 1.2;
 
-  PdfColor get color => green;
+  PdfColor get color => blue;
 
   static const backgroundColor = PdfColors.grey300;
 
   static const strokeWidth = 5.0;
 
   @override
-  pw.Widget build(pw.Context context) {
-    final widgets = <pw.Widget>[
-      pw.Container(
+  Widget build(Context context) {
+    final widgets = <Widget>[
+      Container(
         width: size,
         height: size,
-        child: pw.Stack(
-          alignment: pw.Alignment.center,
-          fit: pw.StackFit.expand,
-          children: <pw.Widget>[
-            pw.Center(
-              child: pw.Text(
+        child: Stack(
+          alignment: Alignment.center,
+          fit: StackFit.expand,
+          children: <Widget>[
+            Center(
+              child: Text(
                 '${(value * 100).round().toInt()}%',
                 textScaleFactor: fontSize,
               ),
             ),
-            pw.CircularProgressIndicator(
+            CircularProgressIndicator(
               value: value,
               backgroundColor: backgroundColor,
               color: color,
@@ -318,23 +229,23 @@ class _Percent extends pw.StatelessWidget {
 
     widgets.add(title);
 
-    return pw.Column(children: widgets);
+    return Column(children: widgets);
   }
 }
 
-class _UrlText extends pw.StatelessWidget {
+class _UrlText extends StatelessWidget {
   _UrlText(this.text, this.url);
 
   final String text;
   final String url;
 
   @override
-  pw.Widget build(pw.Context context) {
-    return pw.UrlLink(
+  Widget build(Context context) {
+    return UrlLink(
       destination: url,
-      child: pw.Text(text,
-          style: const pw.TextStyle(
-            decoration: pw.TextDecoration.underline,
+      child: Text(text,
+          style: const TextStyle(
+            decoration: TextDecoration.underline,
             color: PdfColors.blue,
           )),
     );
