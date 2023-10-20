@@ -32,7 +32,7 @@ const sep = 120.0;
 Future<Uint8List> generateResume(PdfPageFormat format, CustomData data) async {
   final doc = Document(title: 'My Résumé', author: 'David PHAM-VAN');
   final pageTheme = await _myPageTheme(format);
-
+  final String victor = 'Victor Hugo Tavares Brum';
   doc.addPage(
     MultiPage(
       pageTheme: pageTheme,
@@ -52,7 +52,7 @@ Future<Uint8List> generateResume(PdfPageFormat format, CustomData data) async {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    'Declaro para os devidos fins, que a nutricionista _________________________,CRN/RS ________________ está cursando o Programa de ResidênciaMultiprofissional em Saúde - _____________________, curso credenciado pelo CNRMS/MEC, na Sociedade Beneficência e Caridade Lajeado (Hospital Bruno Born). Suas atividades práticas na Instituição e na saúde pública iniciaram em 01/03/2022 e serão concluídas no dia 28/02/2024.',
+                    'Declaro para os devidos fins, que a nutricionista $victor ,CRN/RS ________________ está cursando o Programa de ResidênciaMultiprofissional em Saúde - _____________________, curso credenciado pelo CNRMS/MEC, na Sociedade Beneficência e Caridade Lajeado (Hospital Bruno Born). Suas atividades práticas na Instituição e na saúde pública iniciaram em 01/03/2022 e serão concluídas no dia 28/02/2024.',
                   ),
                   SizedBox(height: 20),
                   Row(

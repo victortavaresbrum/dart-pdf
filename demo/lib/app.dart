@@ -16,6 +16,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   var _data = const CustomData();
   var _hasData = false;
   var _pending = false;
-
+  GlobalKey _identifySizeKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -124,6 +125,31 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     await OpenFile.open(file.path);
   }
 
+  Offset _containerPosition = Offset(0, 0);
+  Offset _widgetPosition = Offset(0, 0);
+  bool isCalculatingDistance = false;
+
+  double _calculateDistance() {
+    final dx = _widgetPosition.dx - _containerPosition.dx;
+    final dy = _widgetPosition.dy - _containerPosition.dy;
+    return sqrt(dx * dx + dy * dy);
+  }
+
+  bool _isWidgetInsideContainer() {
+    final widgetRect = Rect.fromPoints(
+      _widgetPosition,
+      Offset(_widgetPosition.dx + 50, _widgetPosition.dy + 50),
+    );
+
+    final containerRect = Rect.fromPoints(
+      _containerPosition,
+      Offset(_containerPosition.dx + 1000, _containerPosition.dy + 1000),
+    );
+
+    return containerRect.contains(widgetRect.topLeft) &&
+        containerRect.contains(widgetRect.bottomRight);
+  }
+
   @override
   Widget build(BuildContext context) {
     pw.RichText.debug = true;
@@ -155,8 +181,8 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
               flex: 1,
               child: ListView(
                 children: [
-                  InkWell(
-                    mouseCursor: SystemMouseCursors.click,
+                  GestureDetector(
+                    onPanUpdate: (details) {},
                     child: Ink(
                       height: 36,
                       child: const Row(
@@ -175,9 +201,8 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                 ],
               )),
           Expanded(
-            flex: 5,
-            child: Stack(
-              children: [
+              flex: 5,
+              child: Stack(children: [
                 PdfPreview(
                   maxPageWidth: 700,
                   build: (format) => examples[_tab].builder(format, _data),
@@ -185,10 +210,7 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                   onPrinted: _showPrintedToast,
                   onShared: _showSharedToast,
                 ),
-                DragWidget()
-              ],
-            ),
-          ),
+              ]))
         ],
       ),
       floatingActionButton: FloatingActionButton(

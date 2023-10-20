@@ -37,8 +37,9 @@ class _DragWidgetState extends State<DragWidget> {
             },
             child: Container(
               width: 64,
-              height: 24,
+              height: 30,
               color: Colors.amber,
+              child: Text(x1.toString()),
             ),
           ),
         ),
@@ -57,9 +58,12 @@ class _DragWidgetState extends State<DragWidget> {
               });
             },
             child: Container(
-              width: 64,
-              height: 24,
+              width: 100,
+              height: 30,
               color: Colors.red,
+              child: Text(
+                'x=${x2.toString()}' + '' 'y= ${y2.toString()}',
+              ),
             ),
           ),
         ),

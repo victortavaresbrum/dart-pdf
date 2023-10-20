@@ -17,9 +17,12 @@ const examples = <Example>[
   Example('DOCUMENT', 'document.dart', generateDocument),
   Example('INVOICE', 'invoice.dart', generateInvoice),
   Example('REPORT', 'report.dart', generateReport),
-  Example('REPORT2', 'report2.dart', generateReportTwo),
   Example('CALENDAR', 'calendar.dart', generateCalendar),
   Example('CERTIFICATE', 'certificate.dart', generateCertificate, true),
+];
+
+const testandoExemplos = <Example>[
+  Example('REPORT2', 'report2.dart', generateReportTwo),
 ];
 
 typedef LayoutCallbackWithData = Future<Uint8List> Function(
